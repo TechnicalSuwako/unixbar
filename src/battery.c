@@ -25,7 +25,7 @@ char *get_battery_percent(struct batinfo *stat) {
 
   close(apm_dev);
 
-  snprintf(buffer, 17, "BAT: %.2f%s | ", stat->perc, "%");
+  snprintf(buffer, 17, "BAT: %.0f%s | ", stat->perc, "%");
   return buffer;
 }
 #endif

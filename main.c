@@ -202,15 +202,18 @@ int main() {
     draw_text(display, win, gc, 10, height - 10, workspace_str);
 
     int xpos = 100;
-    int window_width = (width - 200) / nwindows;
-    for (unsigned long i = 0; i < nwindows; i++) {
-      char *name;
-      XFetchName(display, windows[i], &name);
-      if (name) {
-        draw_text(display, win, gc, xpos, height - 10, name);
-        XFree(name);
+    if (nwindows > 0) {
+      int window_width = (width - 200) / nwindows;
+      for (unsigned long i = 0; i < nwindows; i++) {
+        char *name;
+        XFetchName(display, windows[i], &name);
+        if (name) {
+        printf("name: %s\n", name);
+          draw_text(display, win, gc, xpos, height - 10, name);
+          XFree(name);
+        }
+        xpos += window_width;
       }
-      xpos += window_width;
     }
 
     char *time_str = get_current_time();
@@ -219,7 +222,7 @@ int main() {
     struct batinfo bstat;
     char *battery_percent = get_battery_percent(&bstat);
     if (battery_percent) {
-      draw_text(display, win, gc, width - 206, height - 10, battery_percent);
+      draw_text(display, win, gc, width - 180, height - 10, battery_percent);
       free(battery_percent);
     }
 

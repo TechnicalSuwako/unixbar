@@ -57,6 +57,11 @@ all:
 	${CC} ${CFLAGS} -o ${NAME} ${FILES} ${LDFLAGS}
 	strip ${NAME}
 
+debug:
+	${CC} -Wall -Wextra -g -I/usr/include -L/usr/lib \
+		-I/usr/X11R6/include -L/usr/X11R6/lib -o ${NAME} \
+		${FILES} ${LDFLAGS}
+
 clean:
 	rm -f ${NAME}
 
@@ -95,4 +100,4 @@ uninstall:
 	rm -rf ${DESTDIR}${PREFIX}/man/man1/${NAME}.1
 	rm -rf ${DESTDIR}${PREFIX}/man/man5/${NAME}.conf.5
 
-.PHONY: all clean dist man release install uninstall
+.PHONY: all debug clean dist man release install uninstall
