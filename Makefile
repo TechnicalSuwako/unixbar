@@ -52,9 +52,10 @@ CFLAGS += -I/usr/local/include -L/usr/local/lib
 .endif
 
 LDFLAGS = -lc -lX11
+SLIBS = -lxcb -lXau -lXdmcp
 
 all:
-	${CC} ${CFLAGS} -o ${NAME} ${FILES} ${LDFLAGS}
+	${CC} ${CFLAGS} -o ${NAME} ${FILES} -static ${LDFLAGS} ${SLIBS}
 	strip ${NAME}
 
 debug:

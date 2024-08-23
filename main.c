@@ -192,7 +192,7 @@ int main() {
 
     windows = get_open_windows(display, root, &nwindows);
     if (windows == NULL) {
-      fprintf(stderr, "Failed to get open windows.\n");
+      fprintf(stderr, "ウィンドウを開くに失敗\n");
       continue;
     }
     XClearWindow(display, win);
@@ -208,9 +208,10 @@ int main() {
         char *name;
         XFetchName(display, windows[i], &name);
         if (name) {
-        printf("name: %s\n", name);
           draw_text(display, win, gc, xpos, height - 10, name);
           XFree(name);
+        } else {
+          draw_text(display, win, gc, xpos, height - 10, "unknown");
         }
         xpos += window_width;
       }
