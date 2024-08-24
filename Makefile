@@ -74,10 +74,8 @@ release:
 	strip release/bin/${VERSION}/${OS}/${ARCH}/${NAME}
 
 install:
-	mkdir -p ${DESTDIR}${PREFIX}/bin ${DESTDIR}${MANPREFIX}/man1\
-		${DESTDIR}${MANPREFIX}/man5
+	mkdir -p ${DESTDIR}${PREFIX}/bin
 	cp -f ${NAME} ${DESTDIR}${PREFIX}/bin
-	cp -f ${NAME}.conf ${DESTDIR}${CNFPREFIX}
 	chmod 755 ${DESTDIR}${PREFIX}/bin/${NAME}
 
 uninstall:
