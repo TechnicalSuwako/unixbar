@@ -20,7 +20,7 @@
 #define FONT "-*-fixed-*-*-*-*-18-*-*-*-*-*-*-*"
 
 const char *sofname = "unixbar";
-const char *version = "0.0.0";
+const char *version = "0.1.0";
 
 int get_current_workspace(Display *display, Window root) {
   Atom actual_type;
@@ -201,19 +201,21 @@ int main() {
     snprintf(workspace_str, 10, "W%d", workspace);
     draw_text(display, win, gc, 10, height - 10, workspace_str);
 
-    int xpos = 100;
+    int xpos = 50;
     if (nwindows > 0) {
-      int window_width = (width - 200) / nwindows;
+      /* int window_width = (width - 200) / nwindows; */
+      int window_width = 200;
       for (unsigned long i = 0; i < nwindows; i++) {
         char *name;
         XFetchName(display, windows[i], &name);
-        if (name) {
+        if (!name) name = "unknown";
+        if (nwindows < 7) {
           draw_text(display, win, gc, xpos, height - 10, name);
-          XFree(name);
+          xpos += window_width;
         } else {
-          draw_text(display, win, gc, xpos, height - 10, "unknown");
+          draw_text(display, win, gc, xpos, height - 10, "many");
+          xpos = 50;
         }
-        xpos += window_width;
       }
     }
 
@@ -227,8 +229,7 @@ int main() {
       free(battery_percent);
     }
 
-    struct volinfo vstat;
-    char *volume_percent = get_volume(&vstat);
+    char *volume_percent = get_volume();
     if (volume_percent) {
       draw_text(display, win, gc, width - 280, height - 10, volume_percent);
       free(volume_percent);

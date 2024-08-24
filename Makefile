@@ -7,10 +7,6 @@ ARCH = ${UNAME_M}
 OS = openbsd
 .elif ${UNAME_S} == "NetBSD"
 OS = netbsd
-.elif ${UNAME_S} == "FreeBSD"
-OS = freebsd
-.elif ${UNAME_S} == "Dragonfly"
-OS = dragonfly
 .elif ${UNAME_S} == "Linux"
 OS = linux
 .endif
@@ -35,7 +31,7 @@ MANPREFIX = ${PREFIX}/man
 .endif
 
 CNFPREFIX = /etc
-.if ${OS} == "freebsd" || ${OS} == "netbsd" || ${OS} == "dragonfly"
+.if ${OS} == "netbsd"
 CNFPREFIX = ${PREFIX}/etc
 .endif
 
@@ -47,8 +43,6 @@ CFLAGS = -Wall -Wextra -O3 -I/usr/include -L/usr/lib
 CFLAGS += -I/usr/pkg/include -L/usr/pkg/lib -I/usr/X11R7/include -L/usr/X11R7/lib
 .elif ${OS} == "openbsd"
 CFLAGS += -I/usr/X11R6/include -L/usr/X11R6/lib
-.elif ${OS} == "freebsd"
-CFLAGS += -I/usr/local/include -L/usr/local/lib
 .endif
 
 LDFLAGS = -lc -lX11
@@ -69,14 +63,9 @@ clean:
 dist:
 	mkdir -p ${NAME}-${VERSION} release/src
 	cp -R LICENSE.txt Makefile README.md CHANGELOG.md\
-		${NAME}.conf ${NAME}.1 ${NAME}.conf.5 main.c src ${NAME}-${VERSION}
+		main.c src ${NAME}-${VERSION}
 	tar zcfv release/src/${NAME}-${VERSION}.tar.gz ${NAME}-${VERSION}
 	rm -rf ${NAME}-${VERSION}
-
-man:
-	mkdir -p release/man/${VERSION}
-	sed "s/VERSION/${VERSION}/g" < ${NAME}.1 > release/man/${VERSION}/${NAME}.1
-	sed "s/VERSION/${VERSION}/g" < ${NAME}.conf.5 > release/man/${VERSION}/${NAME}.conf.5
 
 release:
 	mkdir -p release/bin/${VERSION}/${OS}/${ARCH}
@@ -90,15 +79,8 @@ install:
 	cp -f ${NAME} ${DESTDIR}${PREFIX}/bin
 	cp -f ${NAME}.conf ${DESTDIR}${CNFPREFIX}
 	chmod 755 ${DESTDIR}${PREFIX}/bin/${NAME}
-	sed "s/VERSION/${VERSION}/g" < ${NAME}.1 > ${DESTDIR}${MANPREFIX}/man1/${NAME}.1
-	chmod 644 ${DESTDIR}${MANPREFIX}/man1/${NAME}.1
-	sed "s/VERSION/${VERSION}/g" < ${NAME}.conf.5 >\
-		${DESTDIR}${MANPREFIX}/man5/${NAME}.conf.5
-	chmod 644 ${DESTDIR}${MANPREFIX}/man5/${NAME}.conf.5
 
 uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/${NAME}
-	rm -rf ${DESTDIR}${PREFIX}/man/man1/${NAME}.1
-	rm -rf ${DESTDIR}${PREFIX}/man/man5/${NAME}.conf.5
 
-.PHONY: all debug clean dist man release install uninstall
+.PHONY: all debug clean dist release install uninstall
