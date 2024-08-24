@@ -25,16 +25,6 @@ PREFIX = /usr/local
 PREFIX = /usr
 .endif
 
-MANPREFIX = ${PREFIX}/share/man
-.if ${OS} == "openbsd"
-MANPREFIX = ${PREFIX}/man
-.endif
-
-CNFPREFIX = /etc
-.if ${OS} == "netbsd"
-CNFPREFIX = ${PREFIX}/etc
-.endif
-
 CC = cc
 FILES = main.c src/common.c src/battery.c src/time.c src/volume.c
 
