@@ -4,8 +4,8 @@
 
 #include "common.h"
 
-void draw_text(Display *display, Window win, GC gc, int x, int y, const char *text) {
-  XDrawString(display, win, gc, x, y, text, strlen(text));
+void draw_text(XftDraw *d, XftColor *c, XftFont *f, int x, int y, const char *t) {
+  XftDrawStringUtf8(d, c, f, x, y, (XftChar8 *)t, strlen(t));
 }
 
 long long int run_command_lld(const char *command) {

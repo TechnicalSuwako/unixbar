@@ -32,20 +32,18 @@ CFLAGS = -Wall -Wextra -O3 -I/usr/include -L/usr/lib
 .if ${OS} == "netbsd"
 CFLAGS += -I/usr/pkg/include -L/usr/pkg/lib -I/usr/X11R7/include -L/usr/X11R7/lib
 .elif ${OS} == "openbsd"
-CFLAGS += -I/usr/X11R6/include -L/usr/X11R6/lib
+CFLAGS += -I/usr/X11R6/include -I/usr/X11R6/include/freetype2 -L/usr/X11R6/lib
 .endif
 
-LDFLAGS = -lc -lX11
-SLIBS = -lxcb -lXau -lXdmcp
+LDFLAGS = -lc -lX11 -lXft
+SLIBS = -lxcb -lfontconfig -lz -lexpat -lfreetype -lXrender -lXau -lXdmcp
 
 all:
 	${CC} ${CFLAGS} -o ${NAME} ${FILES} -static ${LDFLAGS} ${SLIBS}
 	strip ${NAME}
 
 debug:
-	${CC} -Wall -Wextra -g -I/usr/include -L/usr/lib \
-		-I/usr/X11R6/include -L/usr/X11R6/lib -o ${NAME} \
-		${FILES} ${LDFLAGS}
+	${CC} -Wall -Wextra -g ${CFLAGS} -o ${NAME} ${FILES} ${LDFLAGS}
 
 clean:
 	rm -f ${NAME}
