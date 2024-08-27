@@ -236,27 +236,35 @@ int main() {
       }
     }
 
+    int batw = width - 80;
     if (istime) {
       char *time_str = get_current_time();
       if (time_str)
-        draw_text(xft_draw, &xft_color, xft_font, width - 80, height - 10, time_str);
+        draw_text(xft_draw, &xft_color, xft_font, batw, height - 10, time_str);
     } else {
       char *date_str = get_current_date();
       if (date_str)
-        draw_text(xft_draw, &xft_color, xft_font, width - 80, height - 10, date_str);
+        draw_text(xft_draw, &xft_color, xft_font, batw, height - 10, date_str);
     }
 #if defined(__OpenBSD__)
+    bool batfull = false;
     struct batinfo bstat;
     char *batperc = get_battery_percent(&bstat);
     if (batperc) {
-      draw_text(xft_draw, &xft_color, xft_font, width - 180, height - 10, batperc);
+      int batw = width - 190;
+      if (strncmp(batperc, "BAT: 100% |", 11) == 0) batfull = true;
+      if (!batfull) batw = width - 180;
+      draw_text(xft_draw, &xft_color, xft_font, batw, height - 10, batperc);
       free(batperc);
     }
 
+    bool volfull = false;
     char *volperc = get_volume();
     if (volperc) {
-      int volw = width - 290;
-      if (strncmp(volperc, "VOL: 100% |", 11) != 0) volw = width - 280;
+      int volw = width - 280;
+      if (strncmp(volperc, "VOL: 100% |", 11) == 0) volfull = true;
+      if (volfull && batfull) volw = width - 300;
+      else if (volfull || batfull) volw = width - 290;
       draw_text(xft_draw, &xft_color, xft_font, volw, height - 10, volperc);
       free(volperc);
     }
