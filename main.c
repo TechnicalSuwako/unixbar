@@ -19,6 +19,7 @@
 
 #define BAR_HEIGHT 36
 #define FONT "Noto Sans CJK JP-10"
+#define BLACK 0x120f12
 
 const char *sofname = "unixbar";
 const char *version = "0.1.0";
@@ -132,6 +133,7 @@ int main() {
   int width, height;
   Window *windows;
   unsigned long nwindows;
+  bool istime = true;
 
   dp = XOpenDisplay(NULL);
   if (dp == NULL) {
@@ -153,8 +155,8 @@ int main() {
     width,
     height,
     0,
-    BlackPixel(dp, screen),
-    BlackPixel(dp, screen)
+    BLACK,
+    BLACK
   );
 
   XSetWindowAttributes attrs;
@@ -186,8 +188,12 @@ int main() {
         break;
       } else if (ev.type == ButtonPress) {
         XButtonEvent *bev = (XButtonEvent *)&ev;
+        printf("fuck you\n");
 
-        if (nwindows > 0) {
+        if (bev->x > width - 80 && bev->x < width) {
+          istime = !istime;
+          printf("timedate\n");
+        } else if (nwindows > 0) {
           unsigned long window_index = bev->x / (width / nwindows);
           if (window_index < nwindows) {
             XRaiseWindow(dp, windows[window_index]);
@@ -204,7 +210,7 @@ int main() {
       continue;
     }
 
-    XSetForeground(dp, gc, 0x120f12);
+    XSetForeground(dp, gc, BLACK);
     XFillRectangle(dp, buf, gc, 0, 0, width, height);
 
     XftDrawChange(xft_draw, buf);
@@ -230,9 +236,15 @@ int main() {
       }
     }
 
-    char *time_str = get_current_time();
-    if (time_str)
-      draw_text(xft_draw, &xft_color, xft_font, width - 80, height - 10, time_str);
+    if (istime) {
+      char *time_str = get_current_time();
+      if (time_str)
+        draw_text(xft_draw, &xft_color, xft_font, width - 80, height - 10, time_str);
+    } else {
+      char *date_str = get_current_date();
+      if (date_str)
+        draw_text(xft_draw, &xft_color, xft_font, width - 80, height - 10, date_str);
+    }
 #if defined(__OpenBSD__)
     struct batinfo bstat;
     char *batperc = get_battery_percent(&bstat);
