@@ -58,7 +58,7 @@ dist:
 release:
 	mkdir -p release/bin/${VERSION}/${OS}/${ARCH}
 	${CC} -O3 ${CFLAGS} -o release/bin/${VERSION}/${OS}/${ARCH}/${NAME} ${FILES}\
-		-static ${LDFLAGS} ${SLIB}
+		-static ${LDFLAGS} ${SLIBS}
 	strip release/bin/${VERSION}/${OS}/${ARCH}/${NAME}
 
 install:
