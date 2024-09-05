@@ -28,7 +28,7 @@ PREFIX = /usr
 CC = cc
 FILES = main.c src/common.c src/battery.c src/time.c src/volume.c
 
-CFLAGS = -Wall -Wextra -O3 -I/usr/include -L/usr/lib
+CFLAGS = -Wall -Wextra -I/usr/include -L/usr/lib
 .if ${OS} == "netbsd"
 CFLAGS += -I/usr/pkg/include -L/usr/pkg/lib -I/usr/X11R7/include -L/usr/X11R7/lib
 .elif ${OS} == "openbsd"
@@ -39,11 +39,11 @@ LDFLAGS = -lc -lX11 -lXft
 SLIBS = -lxcb -lfontconfig -lz -lexpat -lfreetype -lXrender -lXau -lXdmcp
 
 all:
-	${CC} ${CFLAGS} -o ${NAME} ${FILES} -static ${LDFLAGS} ${SLIBS}
+	${CC} -O3 ${CFLAGS} -o ${NAME} ${FILES} -static ${LDFLAGS} ${SLIBS}
 	strip ${NAME}
 
 debug:
-	${CC} -Wall -Wextra -g ${CFLAGS} -o ${NAME} ${FILES} ${LDFLAGS}
+	${CC} -g ${CFLAGS} -o ${NAME} ${FILES} ${LDFLAGS}
 
 clean:
 	rm -f ${NAME}
@@ -57,8 +57,8 @@ dist:
 
 release:
 	mkdir -p release/bin/${VERSION}/${OS}/${ARCH}
-	${CC} ${CFLAGS} -o release/bin/${VERSION}/${OS}/${ARCH}/${NAME} ${FILES}\
-		-static ${LDFLAGS}
+	${CC} -O3 ${CFLAGS} -o release/bin/${VERSION}/${OS}/${ARCH}/${NAME} ${FILES}\
+		-static ${LDFLAGS} ${SLIB}
 	strip release/bin/${VERSION}/${OS}/${ARCH}/${NAME}
 
 install:
